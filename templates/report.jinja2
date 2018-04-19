@@ -26,7 +26,15 @@
     <body>
         <h1>Pylint report</h1>
 
-        <h2>Raw data</h2>
+        {% if report.score %}
+        <h2>Score</h2>
+        {{ "%.02f"|format(report.score) }} / 10
+            {% if report.previous_score %}
+            (previous score: {{ "%.02f"|format(report.previous_score) }} / 10)
+            {% endif %}
+        {% endif %}
+
+        <h2>Messages</h2>
         {% for module, messages in report.modules %}
         <h3>Module <code>{{ module.name }}</code> (<code>{{ module.path }}</code>)</h3>
         <table>

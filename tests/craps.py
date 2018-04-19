@@ -6,6 +6,9 @@ def something():
     return True
 
 def iPreferCamelCase(what):
+    what_are_you_going_to_do_against_such_long_variable_name = 'i know right?'
     return something() is not what
 
-what_are_you_going_to_do_against_such_long_variable_name_i_dont_know_who_you_think_you_can_do_because_there_is_nothing_to_do = 'i know right?'
+THIS_LINE_IS_TOO_LONG = ' Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.'
+
+not_uppercase = 'IT IS NOT'
