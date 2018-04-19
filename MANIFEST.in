@@ -1,0 +1,8 @@
+include README.md
+include MANIFEST.in
+include LICENSE
+include setup.cfg
+include pylint_json2html.py
+recursive-include templates *.jinja2
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]

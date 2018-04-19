@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Pylint report</title>
+        <meta charset="utf-8">
+        <meta name="description" content="auto generated pylint report from JSON">
+        <style type="text/css">
+        body {
+            padding: 1em;
+            margin: 0;
+            background-color: #fffffe;
+            font-family: sans-serif;
+        }
+        table {
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 0.5em;
+            border: 1px solid #333333;
+        }
+        th {
+            background-color: #DCDCDC;
+        }
+        </style>
+    </head>
+    <body>
+        <h1>Pylint report</h1>
+
+        <h2>Raw data</h2>
+        {% for module, messages in report.modules %}
+        <h3>Module <code>{{ module.name }}</code> (<code>{{ module.path }}</code>)</h3>
+        <table>
+            <tr>
+                <th>Line</th>
+                <th>Col.</th>
+                <th>Type</th>
+                <th>Symbol</th>
+                <th>ID</th>
+                <th>Obj</th>
+                <th>Message</th>
+            </tr>
+            {% for message in messages %}
+            <tr>
+                <td>{{ message.line }}</td>
+                <td>{{ message.column }}</td>
+                <td>{{ message.type }}</td>
+                <td><code>{{ message.symbol }}</code></td>
+                <td>{{ message['message-id'] }}</td>
+                <td>{{ message.obj }}</td>
+                <td>{{ message.message }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% endfor %}
+
+        <h2>Metrics</h2>
+        {% macro display_metrics(metrics) -%}
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Count</th>
+            </tr>
+            {% for key, value in metrics.items() %}
+            <tr>
+                <td>{{ key }}</td>
+                <td>{{ value }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% endmacro %}
+
+        <h3>Count per types</h3>
+        {{ display_metrics(metrics.types) }}
+
+        <h3>Count per messages</h3>
+        {{ display_metrics(metrics.symbols) }}
+
+        <h3>Count per modules</h3>
+        {{ display_metrics(metrics.modules) }}
+
+        <h3>Count per path</h3>
+        {{ display_metrics(metrics.paths) }}
+
+    </body>
+</html>

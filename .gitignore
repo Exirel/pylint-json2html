@@ -35,6 +35,10 @@ wheels/
 pip-log.txt
 pip-delete-this-directory.txt
 
+# Pylint reports / html reports
+pylint.json
+pylint.html
+
 # Unit test / coverage reports
 htmlcov/
 .tox/
