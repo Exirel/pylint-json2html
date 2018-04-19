@@ -11,7 +11,7 @@ ModuleInfo = collections.namedtuple('ModuleInfo', ['name', 'path'])
 def build_jinja_env():
     env = Environment(
         loader=PackageLoader('pylint_json2html', 'templates'),
-        autoescape=select_autoescape(['html', 'xml']),
+        autoescape=select_autoescape(['html', 'xml', 'jinja2']),
     )
     return env
 
