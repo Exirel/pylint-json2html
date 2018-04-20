@@ -122,6 +122,7 @@ class Report:
             metrics=self.metrics,
             report=self)
 
+
 class JSONSetEncoder(json.JSONEncoder):
     """Custom JSON Encoder to transform python sets into simple list"""
     def default(self, o):  # pylint: disable=E0202
