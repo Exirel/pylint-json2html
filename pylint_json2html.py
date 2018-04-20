@@ -1,6 +1,8 @@
 """Pylint JSON's report to HTML"""
+import argparse
 import collections
 import json
+import sys
 
 from jinja2 import Environment, PackageLoader, select_autoescape
 from pylint.interfaces import IReporter
@@ -64,20 +66,6 @@ def build_messages_modules(messages):
             sorted(module_messages, key=lambda x: x.get('line')))
 
 
-def main():
-    """Pylint JSON to HTML Main Entry Point"""
-    filename = 'pylint.json'
-
-    with open(filename) as file_pointer:
-        reports = json.load(file_pointer)
-
-    report = Report(
-        reports.get('messages'),
-        reports.get('stats'),
-        reports.get('previous'))
-    print(report.render())
-
-
 def stats_evaluation(stats):
     """Generate an evaluation for the given pylint ``stats``."""
     statement = stats.get('statement')
@@ -131,7 +119,6 @@ class Report:
             messages=self._messages,
             metrics=self.metrics,
             report=self)
-
 
 class JSONSetEncoder(json.JSONEncoder):
     """Custom JSON Encoder to transform python sets into simple list"""
@@ -211,6 +198,44 @@ class JsonExtendedReporter(BaseReporter):
 def register(linter):
     """Register the reporter classes with the linter."""
     linter.register_reporter(JsonExtendedReporter)
+
+
+def build_command_parser():
+    """Build command parser using ``argparse`` module."""
+    parser = argparse.ArgumentParser(
+        description='Transform Pylint JSON report to HTML')
+    parser.add_argument(
+        'filename',
+        metavar='FILENAME',
+        type=argparse.FileType('r'),
+        nargs='?',
+        default=sys.stdin,
+        help='Pylint JSON report input file (or stdin)')
+    parser.add_argument(
+        '-o', '--output',
+        metavar='FILENAME',
+        type=argparse.FileType('w'),
+        nargs='?',
+        default=sys.stdout,
+        help='Pylint HTML report output file (or stdout)')
+
+    return parser
+
+
+def main():
+    """Pylint JSON to HTML Main Entry Point"""
+    parser = build_command_parser()
+    options = parser.parse_args()
+    file_pointer = options.filename
+
+    with file_pointer:
+        reports = json.load(file_pointer)
+
+    report = Report(
+        reports.get('messages'),
+        reports.get('stats'),
+        reports.get('previous'))
+    print(report.render(), file=options.output)
 
 
 if __name__ == '__main__':
