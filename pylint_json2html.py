@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Pylint JSON's report to HTML"""
 import argparse
 import collections

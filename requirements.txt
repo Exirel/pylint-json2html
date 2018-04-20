@@ -2,3 +2,4 @@ pylint
 Jinja2
 isort
 flake8
+pyroma
