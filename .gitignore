@@ -38,6 +38,8 @@ pip-delete-this-directory.txt
 # Pylint reports / html reports
 pylint.json
 pylint.html
+pylint.simple.json
+pylint.simple.html
 
 # Unit test / coverage reports
 htmlcov/

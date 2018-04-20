@@ -9,6 +9,8 @@ from pylint.interfaces import IReporter
 from pylint.reporters import BaseReporter
 
 ModuleInfo = collections.namedtuple('ModuleInfo', ['name', 'path'])
+SIMPLE_JSON = 'json'
+EXTENDED_JSON = 'jsonextended'
 
 
 def build_jinja_env():
@@ -143,7 +145,7 @@ class JsonExtendedReporter(BaseReporter):
     For the pylint run.
     """
     __implements__ = IReporter
-    name = 'jsonextended'
+    name = EXTENDED_JSON
     extension = 'json'
 
     def __init__(self, output=None):
@@ -215,9 +217,16 @@ def build_command_parser():
         '-o', '--output',
         metavar='FILENAME',
         type=argparse.FileType('w'),
-        nargs='?',
         default=sys.stdout,
         help='Pylint HTML report output file (or stdout)')
+    parser.add_argument(
+        '-f', '--input-format',
+        metavar='FORMAT',
+        choices=[SIMPLE_JSON, EXTENDED_JSON],
+        action='store',
+        dest='input_format',
+        default='json',
+        help='Pylint JSON Report input type (json or jsonextended)')
 
     return parser
 
@@ -227,14 +236,19 @@ def main():
     parser = build_command_parser()
     options = parser.parse_args()
     file_pointer = options.filename
+    input_format = options.input_format
 
     with file_pointer:
-        reports = json.load(file_pointer)
+        json_data = json.load(file_pointer)
 
-    report = Report(
-        reports.get('messages'),
-        reports.get('stats'),
-        reports.get('previous'))
+    if input_format == SIMPLE_JSON:
+        report = Report(json_data)
+    elif input_format == EXTENDED_JSON:
+        report = Report(
+            json_data.get('messages'),
+            json_data.get('stats'),
+            json_data.get('previous'))
+
     print(report.render(), file=options.output)
 
 
