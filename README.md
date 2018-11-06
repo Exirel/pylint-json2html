@@ -91,6 +91,6 @@ The configuration above can be tested using the command line instead:
 Then, you will be able to use the JSON extended report to generate an HTML
 report:
 
-    (venv) $ pylint-json2html -f jsonextended -o pylint.html > pylint.json
+    (venv) $ pylint-json2html -f jsonextended -o pylint.html pylint.json
 
 And voilà!
