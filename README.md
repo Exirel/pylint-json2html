@@ -45,7 +45,7 @@ You can always download the sources from the github repository, and use the
 `setup.py` file to `install` or `develop`, but I would not recommend that
 unless you plan to contribute to this small project of mine.
 
-## Usage
+## Usage
 
 My favorite way of using `pylint` and `pylint-json2html` is this one:
 
@@ -65,7 +65,7 @@ You can also redirect `pylint-json2html`'s stdout:
 
     (venv) $ pylint-json2html pylint.json > pylint.html
 
-## Extended Report
+## Extended Report
 
 Actually, I lied about my favorite way, it is this one:
 
