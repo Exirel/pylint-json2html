@@ -130,7 +130,7 @@ class JSONSetEncoder(json.JSONEncoder):
     def default(self, o):  # pylint: disable=E0202
         if isinstance(o, set):
             return list(o)
-        return super().default(o)
+        return super(JSONSetEncoder, self).default(o)
 
 
 class JsonExtendedReporter(BaseReporter):
@@ -152,7 +152,7 @@ class JsonExtendedReporter(BaseReporter):
     extension = 'json'
 
     def __init__(self, output=None):
-        super().__init__(output=output)
+        super(JsonExtendedReporter, self).__init__(output=output)
         self._messages = []
 
     def handle_message(self, msg):
