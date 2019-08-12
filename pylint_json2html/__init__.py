@@ -4,6 +4,7 @@ import argparse
 import collections
 import json
 import sys
+from __future__ import print_function
 
 from jinja2 import Environment, PackageLoader, select_autoescape
 from pylint.interfaces import IReporter
