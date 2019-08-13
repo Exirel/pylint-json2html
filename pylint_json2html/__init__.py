@@ -13,7 +13,6 @@ ModuleInfo = collections.namedtuple('ModuleInfo', ['name', 'path'])
 SIMPLE_JSON = 'json'
 EXTENDED_JSON = 'jsonextended'
 
-
 def build_jinja_env():
     """Build Jinja2 environement"""
     env = Environment(
@@ -23,13 +22,12 @@ def build_jinja_env():
     return env
 
 def default_jinja_env():
-     """Build default Jinja2 environement"""
+    """Build default Jinja2 environement"""
     env = Environment(
         loader=PackageLoader('pylint_json2html', 'templates'),
         autoescape=select_autoescape(['html', 'xml', 'jinja2']),
     )
     return env
-
 
 def build_messages_metrics(messages):
     """Build reports's metrics"""
@@ -53,7 +51,6 @@ def build_messages_metrics(messages):
         'paths': count_paths,
     }
 
-
 def build_messages_modules(messages):
     """Build and yield sorted list of messages per module.
 
@@ -76,7 +73,6 @@ def build_messages_modules(messages):
             module,
             sorted(module_messages, key=lambda x: x.get('line')))
 
-
 def stats_evaluation(stats):
     """Generate an evaluation for the given pylint ``stats``."""
     statement = stats.get('statement')
@@ -91,7 +87,6 @@ def stats_evaluation(stats):
     malus = float(5 * error + warning + refactor + convention)
     malus_ratio = malus / statement
     return 10.0 - (malus_ratio * 10)
-
 
 class Report:
     """Pylint Report Representation
@@ -134,14 +129,12 @@ class Report:
             metrics=self.metrics,
             report=self)
 
-
 class JSONSetEncoder(json.JSONEncoder):
     """Custom JSON Encoder to transform python sets into simple list"""
     def default(self, o):  # pylint: disable=E0202
         if isinstance(o, set):
             return list(o)
         return super().default(o)
-
 
 class JsonExtendedReporter(BaseReporter):
     """Extended JSON Reporter for Pylint
@@ -184,15 +177,12 @@ class JsonExtendedReporter(BaseReporter):
 
     def display_messages(self, layout):
         """Do nothing at the display stage"""
-        pass
 
     def _display(self, layout):
         """Do nothing at the display stage"""
-        pass
 
     def display_reports(self, layout):
         """Do nothing at the display stage"""
-        pass
 
     # Event callbacks
 
@@ -209,11 +199,9 @@ class JsonExtendedReporter(BaseReporter):
         }
         print(json.dumps(reports, cls=JSONSetEncoder, indent=4), file=self.out)
 
-
 def register(linter):
     """Register the reporter classes with the linter."""
     linter.register_reporter(JsonExtendedReporter)
-
 
 def build_command_parser():
     """Build command parser using ``argparse`` module."""
@@ -241,13 +229,12 @@ def build_command_parser():
         default='json',
         help='Pylint JSON Report input type (json or jsonextended)')
     parser.add_argument(
-	'-t', '--template',
-	metavar='TEMPLATE',
-	help='Pylint HTML custom template',
-	dest='template')
+        '-t', '--template',
+        metavar='TEMPLATE',
+        help='Pylint HTML custom template',
+        dest='template')
 
     return parser
-
 
 def main():
     """Pylint JSON to HTML Main Entry Point"""
@@ -267,10 +254,9 @@ def main():
             json_data.get('messages'),
             json_data.get('stats'),
             json_data.get('previous'),
-	    template=custom_template)
+            template=custom_template)
 
     print(report.render(), file=options.output)
-
 
 if __name__ == '__main__':
     main()
