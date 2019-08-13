@@ -5,7 +5,7 @@ import collections
 import json
 import sys
 
-from jinja2 import Environment, PackageLoader, select_autoescape
+from jinja2 import Environment, PackageLoader FileSystemLoader, select_autoescape
 from pylint.interfaces import IReporter
 from pylint.reporters import BaseReporter
 
@@ -16,6 +16,14 @@ EXTENDED_JSON = 'jsonextended'
 
 def build_jinja_env():
     """Build Jinja2 environement"""
+    env = Environment(
+        loader=FileSystemLoader('./'),
+        autoescape=select_autoescape(['html', 'xml', 'jinja2']),
+    )
+    return env
+
+def default_jinja_env():
+     """Build default Jinja2 environement"""
     env = Environment(
         loader=PackageLoader('pylint_json2html', 'templates'),
         autoescape=select_autoescape(['html', 'xml', 'jinja2']),
@@ -92,13 +100,16 @@ class Report:
     data (a list of messages) into something meaningful to work with and to
     display to an end-user.
     """
-    template_name = 'report.jinja2'
 
-    def __init__(self, messages, stats=None, previous_stats=None):
+    def __init__(self, messages, stats=None, previous_stats=None, template=None):
         self._messages = messages
         self._module_messages = dict(build_messages_modules(messages))
-        self.jinja_env = build_jinja_env()
-
+        if template:
+            self.jinja_env = build_jinja_env()
+            self.template_name = template
+        else:
+            self.jinja_env = default_jinja_env()
+            self.template_name = 'report.jinja2'
         self.modules = sorted(
             self._module_messages.items(), key=lambda x: x[0].path)
         self.metrics = build_messages_metrics(messages)
@@ -229,6 +240,11 @@ def build_command_parser():
         dest='input_format',
         default='json',
         help='Pylint JSON Report input type (json or jsonextended)')
+    parser.add_argument(
+	'-t', '--template',
+	metavar='TEMPLATE',
+	help='Pylint HTML custom template',
+	dest='template')
 
     return parser
 
@@ -239,17 +255,19 @@ def main():
     options = parser.parse_args()
     file_pointer = options.filename
     input_format = options.input_format
+    custom_template = options.template
 
     with file_pointer:
         json_data = json.load(file_pointer)
 
     if input_format == SIMPLE_JSON:
-        report = Report(json_data)
+        report = Report(json_data, template=custom_template)
     elif input_format == EXTENDED_JSON:
         report = Report(
             json_data.get('messages'),
             json_data.get('stats'),
-            json_data.get('previous'))
+            json_data.get('previous'),
+	    template=custom_template)
 
     print(report.render(), file=options.output)
 
