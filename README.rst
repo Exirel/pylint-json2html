@@ -6,7 +6,7 @@ report, and this tool will transform this report into an HTML document:
 
 ::
 
-    usage: pylint-json2html [-h] [-o FILENAME] [-f FORMAT] [FILENAME]
+    usage: pylint-json2html [-h] [-o FILENAME] [-f FORMAT] [-t FILENAME] [FILENAME]
 
     Transform Pylint JSON report to HTML
 
@@ -17,6 +17,7 @@ report, and this tool will transform this report into an HTML document:
     -h, --help            show this help message and exit
     -o FILENAME, --output FILENAME Pylint HTML report output file (or stdout)
     -f FORMAT, --input-format FORMAT Pylint JSON Report input type (json or jsonextended)
+    -t FILENAME, --template FILENAME Custom Template to use to generate report 
 
 Why?
 ----

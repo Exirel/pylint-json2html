@@ -5,7 +5,7 @@ import collections
 import json
 import sys
 
-from jinja2 import Environment, PackageLoader FileSystemLoader, select_autoescape
+from jinja2 import Environment, PackageLoader, FileSystemLoader, select_autoescape
 from pylint.interfaces import IReporter
 from pylint.reporters import BaseReporter
 
