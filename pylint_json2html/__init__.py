@@ -21,6 +21,7 @@ from pylint.reporters import BaseReporter
 ModuleInfo = collections.namedtuple('ModuleInfo', ['name', 'path'])
 SIMPLE_JSON = 'json'
 EXTENDED_JSON = 'jsonextended'
+DEFAULT_TEMPLATE_NAME = 'report.jinja2'
 
 
 def build_jinja_env():
@@ -106,13 +107,15 @@ class Report:
     data (a list of messages) into something meaningful to work with and to
     display to an end-user.
     """
-    DEFAULT_TEMPLATE_NAME = 'report.jinja2'
-
-    def __init__(self, messages, stats=None, previous_stats=None, template=None):
+    def __init__(self,
+                 messages,
+                 stats=None,
+                 previous_stats=None,
+                 template=None):
         self._messages = messages
         self._module_messages = dict(build_messages_modules(messages))
         self.jinja_env = build_jinja_env()
-        self.template_name = template or self.DEFAULT_TEMPLATE_NAME
+        self.template_name = template or DEFAULT_TEMPLATE_NAME
 
         self.modules = sorted(
             self._module_messages.items(), key=lambda x: x[0].path)
@@ -188,15 +191,12 @@ class JsonExtendedReporter(BaseReporter):
 
     def display_messages(self, layout):
         """Do nothing at the display stage"""
-        pass
 
     def _display(self, layout):
         """Do nothing at the display stage"""
-        pass
 
     def display_reports(self, layout):
         """Do nothing at the display stage"""
-        pass
 
     # Event callbacks
 
