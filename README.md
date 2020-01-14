@@ -3,7 +3,7 @@
 A pylint JSON report file to HTML: pylint is used to generate a JSON report,
 and this tool will transform this report into an HTML document:
 
-    usage: pylint-json2html [-h] [-o FILENAME] [-f FORMAT] [FILENAME]
+    usage: pylint-json2html [-h] [-o FILENAME] [-t FILENAME] [-f FORMAT] [FILENAME]
 
     Transform Pylint JSON report to HTML
 
@@ -11,11 +11,13 @@ and this tool will transform this report into an HTML document:
     FILENAME              Pylint JSON report input file (or stdin)
 
     optional arguments:
-    -h, --help            show this help message and exit
+    -h, --help          show this help message and exit
     -o FILENAME, --output FILENAME
-                            Pylint HTML report output file (or stdout)
+                        Pylint HTML report output file (or stdout)
+    -t FILENAME, --template FILENAME
+                        Jinja2 custom template to generate report
     -f FORMAT, --input-format FORMAT
-                            Pylint JSON Report input type (json or jsonextended)
+                        Pylint JSON Report input type (json or jsonextended)
 
 ## Why?
 
@@ -94,3 +96,41 @@ report:
     (venv) $ pylint-json2html -f jsonextended -o pylint.html pylint.json
 
 And voilà!
+
+## Custom Template
+
+This plugin uses a Jinja2 template to generate the HTML output, but you may
+need your own template. For that purpose, you can use the option
+`-t/--template`, like this:
+
+    (venv) $ pylint-json2html -f jsonextended -t custom.tpl -o pylint.html pylint.json
+
+### Report
+
+In your template you have access to a `report` object:
+
+* `report.score`: score given by pylint, available only with
+  `jsonextended` format
+* `report.previous_score`: previous score given by pylint, available only with
+  `jsonextended` format
+* `report.modules`: a list of 2-value tuple: `(module, messages)`
+
+The `module` object:
+
+* `module.name`: name of the module
+* `module.path`: path to the module's file
+
+The `messages` value is a list of dict, each with the following keys:
+
+* `line`
+* `column`
+* `type`
+* `symbol`
+* `message-id`
+* `obj`
+* `message`
+
+### Metrics
+
+In your template you have access to a `metrics` dict with the following keys:
+`types`, `symbols`, `modules`, `paths`. Each of them contains a dict.

@@ -38,6 +38,7 @@ pip-delete-this-directory.txt
 # Pylint reports / html reports
 pylint.json
 pylint.html
+pylint.template.html
 pylint.simple.json
 pylint.simple.html
 

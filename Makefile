@@ -10,3 +10,6 @@ pylint.simple.json: tests/*.py pylint_json2html/*.py
 
 pylint.simple.html: pylint.simple.json pylint_json2html/templates/*.jinja2
 	pylint-json2html --input-format json --output pylint.simple.html pylint.simple.json
+
+pylint.template.html: pylint.json tests/template.jinja
+	pylint-json2html --template tests/template.jinja --input-format jsonextended --output pylint.template.html pylint.json
