@@ -3,6 +3,8 @@ def something():
     if True:
         print('It is true.')
         pass
+    g = 'this is not a good variable'
+    result = 60 * 60 * 24 * 365.5 * 100
     return True
 
 def iPreferCamelCase(what):
