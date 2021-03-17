@@ -3,7 +3,8 @@
 A pylint JSON report file to HTML: pylint is used to generate a JSON report,
 and this tool will transform this report into an HTML document:
 
-    usage: pylint-json2html [-h] [-o FILENAME] [-t FILENAME] [-f FORMAT] [FILENAME]
+    usage: pylint-json2html [-h] [-o FILENAME] [-e OUTPUT_ENCODING]
+                            [-t FILENAME] [-f FORMAT] [FILENAME]
 
     Transform Pylint JSON report to HTML
 
@@ -14,6 +15,9 @@ and this tool will transform this report into an HTML document:
     -h, --help          show this help message and exit
     -o FILENAME, --output FILENAME
                         Pylint HTML report output file (or stdout)
+    -e ENCODING, --encoding ENCODING
+                        Encoding used to write output file (if not stdout);
+                        default to utf-8
     -t FILENAME, --template FILENAME
                         Jinja2 custom template to generate report
     -f FORMAT, --input-format FORMAT
@@ -67,6 +71,16 @@ You can also redirect `pylint-json2html`'s stdout:
 
     (venv) $ pylint-json2html pylint.json > pylint.html
 
+You can specify the output encoding used to write to your file. Note that you
+can't do that with stdout (you will have to configure your environment's locale
+if you want to control that):
+
+    (venv) $ pylint-json2html -o pylint.html -e utf-8 pylint.json
+
+This is especially usefull when your locale is something like `cp1252` or
+`latin1`, and you want to make sure your output file is properly written as
+utf-8 (as it should be when working with Python file).
+
 ## Extended Report
 
 Actually, I lied about my favorite way, it is this one:
@@ -88,7 +102,8 @@ statements, or the list of dependencies.
 
 The configuration above can be tested using the command line instead:
 
-    (venv) $ pylint --load-plugins=pylint_json2html --output-format=jsonextended your_package > pylint.json
+    (venv) $ pylint --load-plugins=pylint_json2html \
+                    --output-format=jsonextended your_package > pylint.json
 
 Then, you will be able to use the JSON extended report to generate an HTML
 report:
@@ -134,3 +149,16 @@ The `messages` value is a list of dict, each with the following keys:
 
 In your template you have access to a `metrics` dict with the following keys:
 `types`, `symbols`, `modules`, `paths`. Each of them contains a dict.
+
+### Encoding
+
+The default template contains that header:
+
+    <meta charset="utf-8">
+
+So if you want to use a different output encoding, make sure that:
+
+1. you can actually encode the characters from pylint's output with that
+   encoding
+2. and also that you use your own custom template to change that meta tag,
+   otherwise that might not look very good in a browser

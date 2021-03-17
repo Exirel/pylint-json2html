@@ -233,9 +233,17 @@ def build_command_parser():
     parser.add_argument(
         '-o', '--output',
         metavar='FILENAME',
-        type=argparse.FileType('w'),
+        type=argparse.FileType('wb'),
         default=sys.stdout,
         help='Pylint HTML report output file (or stdout)')
+    parser.add_argument(
+        '-e', '--encoding',
+        metavar='ENCODING',
+        dest='output_encoding',
+        action='store',
+        default='utf-8',
+        help='Encoding used to write output file (if not stdout); '
+             'default to utf-8')
     parser.add_argument(
         '-t', '--template',
         metavar='FILENAME',
@@ -275,7 +283,17 @@ def main():
             json_data.get('previous'),
             template=template)
 
-    print(report.render(), file=options.output)
+    output_pointer = options.output
+    output_encoding = options.output_encoding
+
+    with output_pointer:
+        data = report.render()
+        if 'b' in output_pointer.mode:
+            # this output uses bytes, use selected encoding
+            output_pointer.write(data.encode(output_encoding))
+        else:
+            # this output will encode the data using the default locale
+            output_pointer.write(data)
 
 
 if __name__ == '__main__':
