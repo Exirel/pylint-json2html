@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Pylint JSON's report to HTML"""
 from __future__ import print_function
 
@@ -206,6 +205,17 @@ class JsonExtendedReporter(BaseReporter):
         :param dict stats: Metrics for the current pylint run
         :param dict previous_stats: Metrics for the previous pylint run
         """
+        try:
+            # stats and previous_stats are now LinterStats in Pylint 2.12
+            # TODO: see if LinterStats can be more advantageous vs simple dict
+            from pylint.utils.linterstats import LinterStats
+            if isinstance(stats, LinterStats):
+                stats = vars(stats)
+            if isinstance(previous_stats, LinterStats):
+                previous_stats = vars(previous_stats)
+        except ImportError:
+            pass
+
         reports = {
             'messages': self._messages,
             'stats': stats,
