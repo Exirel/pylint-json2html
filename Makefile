@@ -1,3 +1,13 @@
+.PHONY: clean qa
+
+clean:
+	rm -f pylint.html pylint.json pylint.simple.html pylint.simple.json pylint.template.html
+
+qa:
+	isort pylint_json2html
+	flake8 pylint_json2html
+
+# test commands
 
 pylint.json: tests/*.py pylint_json2html/*.py
 	pylint --load-plugins=pylint_json2html --output-format=jsonextended tests > pylint.json || exit 0
