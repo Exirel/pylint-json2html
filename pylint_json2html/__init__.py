@@ -14,7 +14,6 @@ from jinja2 import (
     PackageLoader,
     select_autoescape,
 )
-from pylint.interfaces import IReporter
 from pylint.reporters import BaseReporter
 
 ModuleInfo = collections.namedtuple('ModuleInfo', ['name', 'path'])
@@ -163,7 +162,6 @@ class JsonExtendedReporter(BaseReporter):
 
     For the pylint run.
     """
-    __implements__ = IReporter
     name = EXTENDED_JSON
     extension = 'json'
 
